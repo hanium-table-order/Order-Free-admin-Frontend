@@ -1,68 +1,126 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+:root{
+  --ring:#e5e7eb; --muted:#6b7280; --primary:#111827; --success:#16a34a; --danger:#ef4444;
+}
+*{ box-sizing:border-box }
+body{ margin:0; font-family: system-ui, -apple-system, 'Apple SD Gothic Neo','Malgun Gothic', sans-serif; color:#111827; background:#fff; }
+a{ color:inherit; text-decoration:none }
+.container{ max-width:1200px; margin:0 auto; padding:24px 16px; }
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+.topbar{ position:sticky; top:0; background:#fff; border-bottom:1px solid var(--ring); z-index:10; }
+.topbar-inner{ display:flex; align-items:center; justify-content:space-between; }
+.app-title{ font-weight:700; font-size:22px }
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+.tabs{ display:flex; gap:8px; padding:12px 0 }
+.tab{ padding:10px 14px; border-radius:10px; border:1px solid var(--ring); background:#f5f6f8; }
+.tab.active{ background:#111827; color:#fff }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+.card{ background:#fff; border:1px solid var(--ring); border-radius:14px; padding:16px; }
+.grid{ display:grid; gap:16px }
+.grid-3{ grid-template-columns: repeat(3, minmax(0, 1fr)) }
+.grid-2{ grid-template-columns: repeat(2, minmax(0, 1fr)) }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+.btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px;
+     border:1px solid var(--ring); background:#111827; color:#fff; cursor:pointer }
+.btn.ghost{ background:#fff; color:#111827 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+.table{ width:100%; border-collapse:collapse }
+.table th,.table td{ padding:12px; border-bottom:1px solid var(--ring); text-align:left }
+.chip{ display:inline-flex; align-items:center; padding:4px 8px; font-size:12px; border-radius:999px; background:#eef2ff }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.switch{ position:relative; display:inline-block; width:46px; height:26px }
+.switch input{ display:none }
+.slider{ position:absolute; cursor:pointer; inset:0; background:#e5e7eb; transition:.2s; border-radius:999px }
+.slider:before{ content:""; position:absolute; height:22px; width:22px; left:2px; bottom:2px; background:#fff; transition:.2s; border-radius:50% }
+input:checked + .slider{ background:#10b981 }
+input:checked + .slider:before{ transform: translateX(20px) }
+
+.muted{ color:var(--muted) }
+.kpi{ font-size:24px; font-weight:700 }
+
+/* ---- 상단 레이아웃 ---- */
+.topbar{ position:sticky; top:0; background:#fff; border-bottom:1px solid #e5e7eb; z-index:10; }
+.topbar-col{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; padding-top:16px; padding-bottom:12px; }
+.app-title{ font-weight:800; font-size:28px; letter-spacing:-0.2px; }
+
+/* ---- 탭 바 (배경 라운드 컨테이너) ---- */
+.tabs-bar{
+  display:flex; gap:18px; align-items:center;
+  padding:10px 12px;
+  background:#f4f5f7;
+  border:1px solid #d1d5db;
+  border-radius:14px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* ---- 개별 탭 (알약 버튼) ---- */
+.tab-pill{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 14px;
+  border:2px solid transparent;
+  border-radius:12px;
+  color:#6b7280;                /* 비활성 텍스트 */
+  font-weight:700;
+  line-height:1;                /* 아이콘 정렬 */
+  transition: background .15s, color .15s, border-color .15s;
 }
+.tab-pill:hover{ background:#eef0f3; color:#374151; }
+.tab-pill.active{
+  background:#ffffff;
+  color:#111827;
+  border-color:#111827;         /* 진한 테두리 */
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+
+/* 아이콘/라벨 미세정렬 */
+.tab-ico{ display:inline-flex; align-items:center; }
+.tab-ico svg{ display:block; vertical-align:middle }
+.tab-label{ font-size:16px; }
+
+/* 컨테이너/기본 스타일(없으면 추가) */
+:root{ --ring:#e5e7eb; --muted:#6b7280; }
+*{ box-sizing:border-box }
+body{ margin:0; font-family: system-ui, -apple-system, 'Apple SD Gothic Neo','Malgun Gothic', sans-serif; color:#111827; background:#fff; }
+.container{ max-width:1200px; margin:0 auto; padding:24px 16px; }
+
+/* ------- Modal ------- */
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.45);
+  display:flex; align-items:center; justify-content:center; padding:16px; z-index:50;
+}
+.modal-panel{
+  width:100%; background:#fff; border-radius:16px; overflow:hidden;
+  border:1px solid #e5e7eb; box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+.modal-header{ display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid #f0f2f4 }
+.modal-title{ font-size:22px; font-weight:800 }
+.modal-close{ appearance:none; border:0; background:transparent; font-size:28px; line-height:1; cursor:pointer; color:#6b7280 }
+.modal-body{ padding:20px 24px }
+
+/* form */
+.form-vert{ display:grid; gap:10px }
+.f-label{ font-weight:700; margin-top:6px }
+.f-input{
+  width:100%; padding:12px 14px; border:2px solid #e5e7eb; border-radius:12px;
+  outline:none; font-size:15px;
+}
+.f-input:focus{ border-color:#111827 }
+
+/* upload area */
+.upload-area{
+  width:100%; height:360px; background:#f3f4f6; border:2px dashed #e5e7eb; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden;
+}
+.upload-empty{ display:flex; flex-direction:column; align-items:center; gap:8px; color:#9ca3af; }
+
+/* modal footer */
+.modal-footer{ display:flex; gap:8px; justify-content:flex-end; padding-top:10px }
+
+/* ------- Popover menu (three dots) ------- */
+.popover{ position:relative; display:inline-block }
+.popover-menu{
+  position:absolute; right:0; top:38px; background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.08); min-width:140px; padding:6px;
+}
+.popover-item{
+  width:100%; text-align:left; background:#fff; border:0; padding:10px 12px; border-radius:8px; cursor:pointer;
+}
+.popover-item:hover{ background:#f3f4f6 }

@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import TopTabs from './components/TopTabs'
+import { Route, Routes } from 'react-router-dom'
+import OrdersPage from './pages/OrdersPage'
+import MenuPage from './pages/MenuPage'
+import TablesPage from './pages/TablesPage'
+import StorePage from './pages/StorePage'
+import StatsPage from './pages/StatsPage'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <header className="topbar">
+        <div className="container topbar-col">
+            <div className="app-title">오더프리 관리자</div>
+            <TopTabs />
+        </div>
+      </header>
+
+      <main className="container" style={{ paddingTop: 16 }}>
+        <Routes>
+          <Route path="/" element={<OrdersPage />} />
+          <Route path="/menu" element={<MenuPage />} />
+          <Route path="/tables" element={<TablesPage />} />
+          <Route path="/store" element={<StorePage />} />
+          <Route path="/stats" element={<StatsPage />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
-
-export default App
