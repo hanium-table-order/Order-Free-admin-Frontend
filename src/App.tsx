@@ -9,12 +9,15 @@ import StatsPage from './pages/StatsPage'
 export default function App() {
   return (
     <div>
-      <header className="topbar">
+        <header className="topbar">
         <div className="container topbar-col">
+            <div className="app-title-wrapper">
             <div className="app-title">오더프리 관리자</div>
+            <div className="app-subtitle">가계 운영을 위한 통합 관리 시스템</div>
+            </div>
             <TopTabs />
         </div>
-      </header>
+        </header>
 
       <main className="container" style={{ paddingTop: 16 }}>
         <Routes>
