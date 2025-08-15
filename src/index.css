@@ -124,3 +124,54 @@ body{ margin:0; font-family: system-ui, -apple-system, 'Apple SD Gothic Neo','Ma
   width:100%; text-align:left; background:#fff; border:0; padding:10px 12px; border-radius:8px; cursor:pointer;
 }
 .popover-item:hover{ background:#f3f4f6 }
+
+
+.app-title-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 4px; /* 살짝 간격 */
+}
+
+.app-subtitle {
+  font-size: 0.9rem;
+  color: #888; /* 연한 회색 */
+  margin-top: 0;
+}
+
+/* ----- 수동 주문 모달 전용 ----- */
+.radio-grid{ display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:10px }
+.radio-pill{
+  display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px;
+  border:2px solid #e5e7eb; background:#fff; cursor:pointer; user-select:none;
+}
+.radio-pill input{ display:none }
+.radio-pill.checked{ border-color:#111827 }
+
+.menu-pick-list{ display:grid; gap:10px; max-height:360px; overflow:auto; padding-right:4px }
+.menu-pick{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; border-radius:12px; border:2px solid #e5e7eb; background:#fff; cursor:pointer;
+}
+.menu-pick:hover{ background:#f8fafc }
+
+.cart-box{ border:1px solid #e5e7eb; border-radius:12px; padding:10px; min-height:360px; background:#fff }
+.cart-row{
+  display:grid; grid-template-columns: 1fr auto auto auto; gap:10px; align-items:center;
+  padding:8px 6px; border-bottom:1px dashed #eef0f3;
+}
+.cart-row:last-child{ border-bottom:0 }
+.cart-name{ font-weight:600 }
+.cart-qty{ display:inline-flex; align-items:center; gap:8px }
+.qty-btn{
+  width:28px; height:28px; border-radius:999px; border:1px solid #e5e7eb; background:#fff; cursor:pointer;
+}
+.cart-amount{ font-weight:700 }
+.remove-btn{
+  border:0; background:#fff; color:#9ca3af; font-size:22px; line-height:1; cursor:pointer;
+}
+.remove-btn:hover{ color:#ef4444 }
