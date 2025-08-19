@@ -1,8 +1,7 @@
-// src/components/TopTabs.tsx
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-type Tab = { to: string; label: string; icon: React.ReactNode } // ✅ JSX.Element → React.ReactNode
+type Tab = { to: string; label: string; icon: React.ReactNode }
 
 const IconOrders = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">

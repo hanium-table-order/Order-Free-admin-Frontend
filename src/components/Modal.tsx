@@ -1,44 +1,47 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 type ModalProps = {
   open: boolean
-  onClose: () => void
   title?: string
   maxWidth?: number
-  children?: React.ReactNode   // ✅ children을 직접 명시
+  onClose: () => void
+  children: React.ReactNode
 }
 
-// React.FC를 쓰면 children 타입이 기본 포함되지만,
-// 환경에 따라 다를 수 있어 위처럼 명시해두는 게 안전합니다.
-const Modal: React.FC<ModalProps> = ({ open, onClose, title, maxWidth = 640, children }) => {
+export default function Modal({ open, title, maxWidth = 720, onClose, children }: ModalProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // ESC로 닫기
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    if (open) document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
   if (!open) return null
 
+  const onBackdropClick = (e: React.MouseEvent) => {
+    if (panelRef.current && !panelRef.current.contains(e.target as Node)) onClose()
+  }
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop" onMouseDown={onBackdropClick}>
       <div
         className="modal-panel"
-        style={{ maxWidth }}
-        onClick={(e) => e.stopPropagation()}
+        ref={panelRef}
+        style={{ width: 'min(100%, '+maxWidth+'px)' }}
         role="dialog"
         aria-modal="true"
-        aria-label={title ?? 'modal'}
       >
         <div className="modal-header">
           <div className="modal-title">{title}</div>
-          <button className="modal-close" onClick={onClose} aria-label="close">×</button>
+          <button className="modal-close" onClick={onClose} aria-label="닫기">×</button>
         </div>
-        <div className="modal-body">{children}</div>
+        <div className="modal-body">
+          {children}
+        </div>
       </div>
     </div>
   )
 }
-
-export default Modal

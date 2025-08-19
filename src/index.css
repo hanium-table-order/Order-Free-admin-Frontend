@@ -1,177 +1,292 @@
+/* =========================================================
+   Global Design Tokens — Toss-like + Orange (공통)
+   ========================================================= */
 :root{
-  --ring:#e5e7eb; --muted:#6b7280; --primary:#111827; --success:#16a34a; --danger:#ef4444;
+  /* Brand */
+  --brand: #ff6b00;
+  --brand-600: #ff7e22;
+  --brand-700: #e66000;
+  --brand-tint: #ffe9d7;
+  --brand-tint-2: #fff4ea;
+
+  /* Status tints (실시간 주문 카드용 파스텔) */
+  --tint-new:  #FFEDE6;
+  --tint-prep: #FFF7DA;
+  --tint-done: #ECFFF6;
+
+  /* Neutral */
+  --ink: #111827;
+  --sub: #6b7280;
+  --muted: #9ca3af;
+  --line: #e5e7eb;
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+
+  /* Spacing */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px;
+  --s-6: 24px; --s-7: 28px; --s-8: 32px; --s-10: 40px;
+
+  /* Radius / Shadow */
+  --r-8: 8px; --r-10: 10px; --r-12: 12px; --r-16: 16px; --r-20: 20px; --pill: 999px;
+  --shadow-sm: 0 2px 6px rgba(0,0,0,.06);
 }
-*{ box-sizing:border-box }
-body{ margin:0; font-family: system-ui, -apple-system, 'Apple SD Gothic Neo','Malgun Gothic', sans-serif; color:#111827; background:#fff; }
-a{ color:inherit; text-decoration:none }
-.container{ max-width:1200px; margin:0 auto; padding:24px 16px; }
 
-.topbar{ position:sticky; top:0; background:#fff; border-bottom:1px solid var(--ring); z-index:10; }
-.topbar-inner{ display:flex; align-items:center; justify-content:space-between; }
-.app-title{ font-weight:700; font-size:22px }
+/* =========================================================
+   Base
+   ========================================================= */
+*{ box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+a{ color: inherit; text-decoration: none; }
+button{ font-family: inherit; }
+.container{ max-width: 1200px; margin: 0 auto; padding: 0 var(--s-4); }
 
-.tabs{ display:flex; gap:8px; padding:12px 0 }
-.tab{ padding:10px 14px; border-radius:10px; border:1px solid var(--ring); background:#f5f6f8; }
-.tab.active{ background:#111827; color:#fff }
+h1 { margin: 8px 0; line-height: 1.2; }
 
-.card{ background:#fff; border:1px solid var(--ring); border-radius:14px; padding:16px; }
-.grid{ display:grid; gap:16px }
-.grid-3{ grid-template-columns: repeat(3, minmax(0, 1fr)) }
-.grid-2{ grid-template-columns: repeat(2, minmax(0, 1fr)) }
+/* =========================================================
+   Header (Title + Tabs) — 공통 상단
+   ========================================================= */
+.topbar{
+  position: sticky; top: 0; z-index: 10;
+  background: #fff; border-bottom: 1px solid var(--line);
+}
+.header-stack{
+  display: flex; flex-direction: column; gap: 2px;
+  padding: var(--s-8) 0 var(--s-4);
+}
+.app-title{ font-size: 28px; font-weight: 800; letter-spacing: -0.2px; }
+.app-subtitle{ font-size: 14px; color: var(--sub); }
 
-.btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px;
-     border:1px solid var(--ring); background:#111827; color:#fff; cursor:pointer }
-.btn.ghost{ background:#fff; color:#111827 }
-
-.table{ width:100%; border-collapse:collapse }
-.table th,.table td{ padding:12px; border-bottom:1px solid var(--ring); text-align:left }
-.chip{ display:inline-flex; align-items:center; padding:4px 8px; font-size:12px; border-radius:999px; background:#eef2ff }
-
-.switch{ position:relative; display:inline-block; width:46px; height:26px }
-.switch input{ display:none }
-.slider{ position:absolute; cursor:pointer; inset:0; background:#e5e7eb; transition:.2s; border-radius:999px }
-.slider:before{ content:""; position:absolute; height:22px; width:22px; left:2px; bottom:2px; background:#fff; transition:.2s; border-radius:50% }
-input:checked + .slider{ background:#10b981 }
-input:checked + .slider:before{ transform: translateX(20px) }
-
-.muted{ color:var(--muted) }
-.kpi{ font-size:24px; font-weight:700 }
-
-/* ---- 상단 레이아웃 ---- */
-.topbar{ position:sticky; top:0; background:#fff; border-bottom:1px solid #e5e7eb; z-index:10; }
-.topbar-col{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; padding-top:16px; padding-bottom:12px; }
-.app-title{ font-weight:800; font-size:28px; letter-spacing:-0.2px; }
-
-/* ---- 탭 바 (배경 라운드 컨테이너) ---- */
+.tabs-wrap{ margin-top: 0; margin-bottom: 8px; }
 .tabs-bar{
-  display:flex; gap:18px; align-items:center;
-  padding:10px 12px;
-  background:#f4f5f7;
-  border:1px solid #d1d5db;
-  border-radius:14px;
+  display: flex; gap: 28px; align-items: center; justify-content: center;
+  padding: 12px 20px;
+  background: #fff;
+  border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: var(--shadow-sm);
 }
-
-/* ---- 개별 탭 (알약 버튼) ---- */
 .tab-pill{
-  display:inline-flex; align-items:center; gap:10px;
-  padding:10px 14px;
-  border:2px solid transparent;
-  border-radius:12px;
-  color:#6b7280;                /* 비활성 텍스트 */
-  font-weight:700;
-  line-height:1;                /* 아이콘 정렬 */
-  transition: background .15s, color .15s, border-color .15s;
+  position: relative;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  color: #606a79; font-weight: 700; font-size: 15px;
+  border-radius: 12px; border: 1px solid transparent; background: transparent;
+  transition: background .15s, color .15s, border-color .15s, transform .04s;
 }
-.tab-pill:hover{ background:#eef0f3; color:#374151; }
+.tab-pill:hover{ background: var(--brand-tint-2); color: var(--brand-700); }
+.tab-pill:active{ transform: translateY(1px); }
 .tab-pill.active{
-  background:#ffffff;
-  color:#111827;
-  border-color:#111827;         /* 진한 테두리 */
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  color: var(--brand-700); background: #fff; border-color: var(--brand); box-shadow: var(--shadow-sm);
+}
+.tab-pill.active::after{
+  content:""; position:absolute; left:10px; right:10px; bottom:-12px; height:2px;
+  background: var(--brand); border-radius: 2px;
+}
+.tab-ico svg{ display:block; color: currentColor; }
+.tab-label{ font-size: 15px; }
+
+/* =========================================================
+   공통 UI (버튼/스위치/칩/카드/그리드)
+   ========================================================= */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px 14px; min-height:36px; line-height:1; white-space:nowrap;
+  border-radius:12px; border:1px solid var(--line);
+  background:#fff; color:#111827; font-weight:700; cursor:pointer;
+  transition:background .15s, color .15s, border-color .15s, transform .04s;
+}
+.btn:hover{ background:#f6f7f9; }
+.btn:active{ transform: translateY(1px); }
+.btn.primary{ background: var(--brand); border-color: var(--brand); color:#fff; }
+.btn.primary:hover{ background: var(--brand-600); }
+.btn.ghost { background:#fff; color: var(--brand-700); border-color:#ffd9be; }
+.btn.ghost:hover{ background:#fff6ef; }
+.btn.outline{ background:#fff; color:#111827; border:1.5px solid var(--line); }
+.btn.outline:hover{ background:#f6f7f9; }
+.btn.danger{ background:#ff6b00; border-color:#ff6b00; color:#fff; }
+.btn.danger:hover{ filter:brightness(0.98); }
+
+.switch{ position:relative; width: 56px; height: 30px; }
+.switch input{ display:none; }
+.slider{
+  position:absolute; inset:0; background:#d1d5db; border-radius: var(--pill); transition:.2s;
+}
+.slider:before{
+  content:""; position:absolute; left:3px; bottom:3px; width:24px; height:24px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.12); transition:.2s;
+}
+input:checked + .slider{ background: var(--brand); }
+input:checked + .slider:before{ transform: translateX(26px); }
+
+.chip{
+  background:#fff6ef; color: var(--brand-700);
+  border:1px solid #ffd9be; padding:8px 12px; border-radius: var(--pill); font-weight:700;
 }
 
-/* 아이콘/라벨 미세정렬 */
-.tab-ico{ display:inline-flex; align-items:center; }
-.tab-ico svg{ display:block; vertical-align:middle }
-.tab-label{ font-size:16px; }
+.grid{ display:grid; gap: var(--s-6); }
+.grid-3{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px){ .grid-3{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 740px){  .grid-3{ grid-template-columns: 1fr; } }
 
-/* 컨테이너/기본 스타일(없으면 추가) */
-:root{ --ring:#e5e7eb; --muted:#6b7280; }
-*{ box-sizing:border-box }
-body{ margin:0; font-family: system-ui, -apple-system, 'Apple SD Gothic Neo','Malgun Gothic', sans-serif; color:#111827; background:#fff; }
-.container{ max-width:1200px; margin:0 auto; padding:24px 16px; }
+.card{
+  background:#fff; border:1px solid var(--line);
+  border-radius:16px; padding:16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
 
-/* ------- Modal ------- */
+/* =========================================================
+   실시간 주문(공통 컨트롤만) — 페이지에서 사용 중
+   ========================================================= */
+.controls{
+  display:flex; align-items:center; gap: var(--s-4);
+  margin: 16px 0 20px 0;
+}
+.kv{ display:flex; align-items:center; gap: 10px; color: var(--sub); font-weight: 700; }
+
+/* =========================================================
+   메뉴 관리 (MenuPage)
+   ========================================================= */
+.page.page-menu .container { padding: 0; }
+
+.menu-card{ padding:16px; }
+
+.menu-toolbar{
+  display:flex; gap:12px; align-items:center;
+  margin-bottom:14px;
+}
+.menu-search{
+  flex:1; min-width:220px;
+  padding:12px 14px; border:1.5px solid var(--line); border-radius:12px;
+  background:#fff; outline:none; font-size:15px;
+}
+.menu-search::placeholder{ color:#9aa3ad }
+.menu-search:focus{ border-color: var(--brand); box-shadow: 0 0 0 3px rgba(255,107,0,.10) }
+.menu-select{
+  padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:#fff; outline:none; font-size:15px;
+}
+.menu-select:focus{ border-color: var(--brand); box-shadow: 0 0 0 3px rgba(255,107,0,.10) }
+
+.menu-table{ width: 100%; border-collapse: collapse; margin: 0; }
+.menu-table thead{ background:#f9fafb; border-bottom: 2px solid #e5e7eb; }
+.menu-table thead th{
+  padding: 12px 16px; font-weight: 600; color:#374151; text-align: left;
+}
+.menu-table tbody tr{ border-bottom: 1px solid #f1f5f9; }
+.menu-table tbody td{ padding: 12px 16px; }
+
+/* 컬럼 정렬/너비 */
+.col-photo{ width:72px; text-align:center; }
+.col-name{ width:28%; text-align:center; }
+.col-cat{ width:18%; text-align:center; }
+.col-price{ width:14%; text-align:center; padding-right:18px; }
+.col-status{ width:30%; text-align:center; }
+.col-actions{ width:90px; text-align:center; }
+
+.thumb{ width:40px; height:40px; border-radius:8px; background:#f3f4f6; border:1px solid #edf0f3 }
+.badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px; white-space:nowrap;
+}
+.badge.orange{ background:#fff6ef; border:1px solid #ffd9be; color:var(--brand-700) }
+.badge.green{  background:#ecfdf5; border:1px solid #bbf7d0; color:#047857 }
+.badge.gray{   background:#f3f4f6; border:1px solid #e5e7eb; color:#475569 }
+.badge.red{    background:#fef2f2; border:1px solid #fecaca; color:#b91c1c }
+
+.status-cell{ display:flex; align-items:center; gap:10px; min-width:0 }
+.status.on{ color:#16a34a; font-weight:700 }
+.status.off{ color:#ef4444; font-weight:700 }
+
+/* =========================================================
+   Modal / Form / Upload (메뉴 생성/수정 공용)
+   ========================================================= */
 .modal-backdrop{
-  position:fixed; inset:0; background:rgba(0,0,0,.45);
-  display:flex; align-items:center; justify-content:center; padding:16px; z-index:50;
+  position:fixed; inset:0; z-index:50;
+  background:rgba(0,0,0,.45);
+  display:flex; align-items:flex-start; justify-content:center;
+  padding:24px 16px;
 }
 .modal-panel{
-  width:100%; background:#fff; border-radius:16px; overflow:hidden;
-  border:1px solid #e5e7eb; box-shadow:0 10px 30px rgba(0,0,0,.2);
+  background:#fff; border-radius:16px; border:1px solid var(--line);
+  box-shadow:0 12px 40px rgba(0,0,0,.18);
+  overflow:hidden; transform:translateY(12px); animation:modal-up .18s ease-out forwards;
 }
-.modal-header{ display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid #f0f2f4 }
-.modal-title{ font-size:22px; font-weight:800 }
-.modal-close{ appearance:none; border:0; background:transparent; font-size:28px; line-height:1; cursor:pointer; color:#6b7280 }
-.modal-body{ padding:20px 24px }
-
-/* form */
-.form-vert{ display:grid; gap:10px }
-.f-label{ font-weight:700; margin-top:6px }
-.f-input{
-  width:100%; padding:12px 14px; border:2px solid #e5e7eb; border-radius:12px;
-  outline:none; font-size:15px;
-}
-.f-input:focus{ border-color:#111827 }
-
-/* upload area */
-.upload-area{
-  width:100%; height:360px; background:#f3f4f6; border:2px dashed #e5e7eb; border-radius:12px;
-  display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden;
-}
-.upload-empty{ display:flex; flex-direction:column; align-items:center; gap:8px; color:#9ca3af; }
-
-/* modal footer */
-.modal-footer{ display:flex; gap:8px; justify-content:flex-end; padding-top:10px }
-
-/* ------- Popover menu (three dots) ------- */
-.popover{ position:relative; display:inline-block }
-.popover-menu{
-  position:absolute; right:0; top:38px; background:#fff; border:1px solid #e5e7eb; border-radius:12px;
-  box-shadow:0 8px 24px rgba(0,0,0,.08); min-width:140px; padding:6px;
-}
-.popover-item{
-  width:100%; text-align:left; background:#fff; border:0; padding:10px 12px; border-radius:8px; cursor:pointer;
-}
-.popover-item:hover{ background:#f3f4f6 }
-
-
-.app-title-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.app-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 4px; /* 살짝 간격 */
-}
-
-.app-subtitle {
-  font-size: 0.9rem;
-  color: #888; /* 연한 회색 */
-  margin-top: 0;
-}
-
-/* ----- 수동 주문 모달 전용 ----- */
-.radio-grid{ display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:10px }
-.radio-pill{
-  display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px;
-  border:2px solid #e5e7eb; background:#fff; cursor:pointer; user-select:none;
-}
-.radio-pill input{ display:none }
-.radio-pill.checked{ border-color:#111827 }
-
-.menu-pick-list{ display:grid; gap:10px; max-height:360px; overflow:auto; padding-right:4px }
-.menu-pick{
+@keyframes modal-up{ from{ transform:translateY(24px); opacity:.9 } to{ transform:translateY(0); opacity:1 } }
+.modal-header{
   display:flex; align-items:center; justify-content:space-between;
-  padding:14px 16px; border-radius:12px; border:2px solid #e5e7eb; background:#fff; cursor:pointer;
+  padding:18px 20px; border-bottom:1px solid #f0f2f4;
 }
-.menu-pick:hover{ background:#f8fafc }
+.modal-title{ font-size:20px; font-weight:800; }
+.modal-close{ appearance:none; border:0; background:transparent; font-size:28px; line-height:1; cursor:pointer; color:#6b7280 }
+.modal-body{ padding:20px; }
+.modal-footer{ display:flex; gap:8px; justify-content:flex-end; padding-top:10px; }
 
-.cart-box{ border:1px solid #e5e7eb; border-radius:12px; padding:10px; min-height:360px; background:#fff }
-.cart-row{
-  display:grid; grid-template-columns: 1fr auto auto auto; gap:10px; align-items:center;
-  padding:8px 6px; border-bottom:1px dashed #eef0f3;
+.form-vert{ display:grid; gap:12px }
+.f-label{ font-weight:700; margin-top:6px; color:#374151 }
+.f-input{
+  width:100%; padding:12px 14px;
+  border:1.5px solid var(--line); border-radius:12px; outline:none; font-size:15px; background:#fff;
 }
-.cart-row:last-child{ border-bottom:0 }
-.cart-name{ font-weight:600 }
-.cart-qty{ display:inline-flex; align-items:center; gap:8px }
-.qty-btn{
-  width:28px; height:28px; border-radius:999px; border:1px solid #e5e7eb; background:#fff; cursor:pointer;
+.f-input:focus{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(255,107,0,.10) }
+
+.upload-area{
+  width:100%; height:320px;
+  background:#f3f4f6; border:2px dashed var(--line);
+  border-radius:12px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; overflow:hidden;
 }
-.cart-amount{ font-weight:700 }
-.remove-btn{
-  border:0; background:#fff; color:#9ca3af; font-size:22px; line-height:1; cursor:pointer;
+.upload-empty{ display:flex; flex-direction:column; align-items:center; gap:8px; color:#9ca3af }
+
+/* =========================================================
+   테이블 관리 (TablesPage)
+   ========================================================= */
+.page.page-tables .container { padding-top: 8px; }
+
+.page-tables .page-title{
+  margin: 10px 0 8px;
+  line-height: 1.15;
+  font-size: 28px;
+  font-weight: 800;
 }
-.remove-btn:hover{ color:#ef4444 }
+.page-tables .toolbar-right{
+  display: flex; gap: 8px; justify-content: flex-end; align-items: center;
+  margin: 6px 0 12px;
+}
+.page-tables .card{ padding: 16px 18px; }
+.page-tables .section-title{ margin: 0 0 10px; font-size: 16px; font-weight: 800; }
+
+.page-tables .table{ width: 100%; border-collapse: collapse; }
+.page-tables .table thead th{
+  background: #f9fafb; border-bottom: 1px solid var(--line);
+  padding: 10px 12px; font-weight: 700; color: #374151; text-align: center;
+}
+.page-tables .table tbody td{
+  padding: 12px; border-bottom: 1px solid #f1f5f9; text-align: center;
+}
+.page-tables .table tbody tr:hover{ background: #fafafa; }
+.page-tables .table tbody td:first-child{ text-align: left; }
+
+.badge.gray{
+  display:inline-flex; align-items:center; padding: 4px 8px; border-radius: 999px;
+  background:#f3f4f6; border:1px solid #e5e7eb; color:#475569; font-size: 12px; font-weight: 700;
+}
+
+.page-tables .preview-wrap{ display: flex; justify-content: center; margin-top: 16px; }
+.page-tables .preview-card{
+  width: min(760px, 100%); background: #fff; border: 1px solid var(--line);
+  border-radius: 16px; padding: 18px; text-align: center; box-shadow: var(--shadow-sm);
+}
+.page-tables .preview-title{ font-size: 15px; font-weight: 800; margin: 0 0 4px; }
+.page-tables .preview-sub{ font-size: 22px; font-weight: 800; margin: 0 0 10px; }
+.page-tables .preview-qr{ display: grid; place-items: center; margin: 8px 0 6px; }
+.page-tables .qr-box{
+  width: 240px; height: 240px; display: grid; place-items: center;
+  background: #f5f7fa; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+}
+.page-tables .preview-helper{ color: var(--sub); font-size: 13px; margin-top: 6px; }
+.page-tables .preview-code{ margin-top: 6px; font-weight: 700; letter-spacing: .2px; }
