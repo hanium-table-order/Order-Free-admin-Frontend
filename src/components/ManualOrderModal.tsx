@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Modal from './Modal'
 import { menuItems, tables } from '../mockData'
 import type { OrderItem } from '../types'
@@ -12,16 +12,17 @@ type Props = {
 export default function ManualOrderModal({ open, onClose, onSubmit }: Props) {
   const [tableId, setTableId] = useState<number>(tables[0]?.id ?? 1)
   const [cart, setCart] = useState<OrderItem[]>([])
-
   const total = useMemo(() => cart.reduce((s, it) => s + it.price, 0), [cart])
+  const imgInput = useRef<HTMLInputElement>(null) // 필요시 확장용
 
-  const addItem = (name: string, price: number) => {
+  const addItem = (name: string, price: number) =>
     setCart(list => [...list, { name, qty: 1, price }])
-  }
-  const inc = (idx: number, unit: number, priceEach: number) => {
+
+  const inc = (idx: number, unit: number, priceEach: number) =>
     setCart(list => list.map((it, i) => i!==idx ? it : { ...it, qty: it.qty + unit, price: it.price + unit*priceEach }))
-  }
-  const remove = (idx: number) => setCart(list => list.filter((_, i) => i !== idx))
+
+  const remove = (idx: number) =>
+    setCart(list => list.filter((_, i) => i !== idx))
 
   const submit = () => {
     if (!cart.length) return alert('메뉴를 1개 이상 선택하세요')
@@ -33,7 +34,6 @@ export default function ManualOrderModal({ open, onClose, onSubmit }: Props) {
   return (
     <Modal open={open} onClose={onClose} title="수동 주문 접수" maxWidth={860}>
       <div className="grid" style={{ gridTemplateColumns:'1fr 1fr', gap:16 }}>
-        {/* 왼쪽: 테이블/메뉴 */}
         <div>
           <div className="f-label" style={{marginBottom:8}}>테이블 선택</div>
           <div className="radio-grid">
@@ -56,7 +56,6 @@ export default function ManualOrderModal({ open, onClose, onSubmit }: Props) {
           </div>
         </div>
 
-        {/* 오른쪽: 주문 내역 */}
         <div>
           <div className="f-label" style={{marginBottom:8}}>주문 내역</div>
           <div className="cart-box">
@@ -81,11 +80,12 @@ export default function ManualOrderModal({ open, onClose, onSubmit }: Props) {
             <div className="kpi">총액 ₩ {total.toLocaleString()}</div>
             <div style={{display:'flex', gap:8}}>
               <button className="btn ghost" onClick={onClose}>취소</button>
-              <button className="btn" onClick={submit}>주문 전송</button>
+              <button className="btn primary" onClick={submit}>주문 전송</button>
             </div>
           </div>
         </div>
       </div>
+      <input ref={imgInput} type="file" hidden />
     </Modal>
   )
 }
