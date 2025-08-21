@@ -22,6 +22,7 @@ export default function OrdersPage() {
 
   return (
     <>
+      <h1 className="page-title"></h1>
       {/* 상단 컨트롤 바 */}
       <div className="controls">
         <div className="kv">
