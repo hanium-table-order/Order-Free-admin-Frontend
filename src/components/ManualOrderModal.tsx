@@ -33,7 +33,7 @@ export default function ManualOrderModal({ open, onClose, onSubmit }: Props) {
 
   return (
     <Modal open={open} onClose={onClose} title="수동 주문 접수" maxWidth={860}>
-      <div className="grid" style={{ gridTemplateColumns:'1fr 1fr', gap:16 }}>
+      <div className="manual-order">
         <div>
           <div className="f-label" style={{marginBottom:8}}>테이블 선택</div>
           <div className="radio-grid">

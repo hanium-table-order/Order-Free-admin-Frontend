@@ -1,45 +1,55 @@
-import { useMemo, useState } from 'react'
+import { useRef, useState } from 'react'
 
 type TableRow = {
   id: number
   name: string
-  code: string        // QR에 쓸 링크/코드 (목업)
+  code: string
+  x: number
+  y: number
 }
 
 export default function TablesPage() {
-  // ----- 목업 데이터 -----
   const [rows, setRows] = useState<TableRow[]>([
-    { id: 1, name: '1번 테이블', code: '/order?t=1' },
-    { id: 2, name: '2번 테이블', code: '/order?t=2' },
-    { id: 3, name: '3번 테이블', code: '/order?t=3' },
-    { id: 4, name: '창가자리',   code: '/order?t=4' },
+    { id: 1, name: '1번 테이블', code: '/order?t=1', x: 80,  y: 80 },
+    { id: 2, name: '2번 테이블', code: '/order?t=2', x: 260, y: 80 },
+    { id: 3, name: '3번 테이블', code: '/order?t=3', x: 80,  y: 220 },
+    { id: 4, name: '창가자리',   code: '/order?t=4', x: 260, y: 220 },
   ])
-  const [selectedId, setSelectedId] = useState<number>(1)
 
-  const selected = useMemo(
-    () => rows.find(r => r.id === selectedId) ?? rows[0],
-    [rows, selectedId]
-  )
+  const [snap, setSnap] = useState(true)
+  const [snapStep] = useState(10)
 
-  // ----- 액션들 -----
+  const floorRef = useRef<HTMLDivElement>(null)
+
+  // ===== CRUD =====
   const addOne = () => {
     const name = prompt('테이블 이름을 입력하세요', `${rows.length + 1}번 테이블`)
     if (!name) return
     const id = Math.max(0, ...rows.map(r => r.id)) + 1
-    setRows(list => [...list, { id, name, code: `/order?t=${id}` }])
-    setSelectedId(id)
+    const rect = floorRef.current?.getBoundingClientRect()
+    const x = rect ? rect.width / 2 - 80 : 140
+    const y = rect ? rect.height / 2 - 60 : 140
+    setRows(list => [...list, { id, name, code: `/order?t=${id}`, x, y }])
   }
 
   const addBulk = () => {
     const n = Number(prompt('몇 개를 일괄 추가할까요?', '3') || '0')
     if (!Number.isFinite(n) || n <= 0) return
     const maxId = Math.max(0, ...rows.map(r => r.id))
+    const baseX = 40, baseY = 40
     const next: TableRow[] = Array.from({ length: n }, (_, i) => {
       const id = maxId + i + 1
-      return { id, name: `${id}번 테이블`, code: `/order?t=${id}` }
+      const col = i % 4
+      const row = Math.floor(i / 4)
+      return {
+        id,
+        name: `${id}번 테이블`,
+        code: `/order?t=${id}`,
+        x: baseX + col * (160 + 24),  // 대략적 간격(가변 폭이므로 여유치)
+        y: baseY + row * (110 + 24),
+      }
     })
     setRows(list => [...list, ...next])
-    setSelectedId(maxId + 1)
   }
 
   const remove = (id: number) => {
@@ -47,89 +57,101 @@ export default function TablesPage() {
     if (!row) return
     if (!confirm(`"${row.name}"을(를) 삭제할까요?`)) return
     setRows(list => list.filter(r => r.id !== id))
-    if (selectedId === id) {
-      const remain = rows.filter(r => r.id !== id)
-      setSelectedId(remain[0]?.id ?? 0)
+  }
+
+  // ===== Drag & Drop =====
+  type DragState = {
+    id: number
+    startX: number
+    startY: number
+    baseX: number
+    baseY: number
+    w: number
+    h: number
+  } | null
+  const dragRef = useRef<DragState>(null)
+
+  const clampToFloor = (x: number, y: number, w: number, h: number) => {
+    const rect = floorRef.current?.getBoundingClientRect()
+    if (!rect) return { x, y }
+    const maxX = rect.width - w
+    const maxY = rect.height - h
+    return { x: Math.max(0, Math.min(maxX, x)), y: Math.max(0, Math.min(maxY, y)) }
+  }
+
+  const snapIfNeeded = (x: number, y: number) => {
+    if (!snap) return { x, y }
+    return {
+      x: Math.round(x / snapStep) * snapStep,
+      y: Math.round(y / snapStep) * snapStep,
     }
   }
 
-  // 간단 인쇄: 프리뷰 박스만 새 창에 렌더링하고 print()
-  const printQR = (row: TableRow) => {
-    const html = `
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8" />
-<title>${row.name} QR</title>
-<style>
-  body{ font-family: Pretendard, -apple-system, sans-serif; padding:24px }
-  .box{ width:380px; margin:0 auto; text-align:center }
-  .qr{ width:320px; height:320px; margin:12px auto; border:1px solid #eee; display:grid; place-items:center; }
-  .title{ font-size:20px; font-weight:800; margin:4px 0 8px }
-  .muted{ color:#6b7280; font-size:14px }
-  .code{ margin-top:8px; font-weight:700 }
-</style>
-</head>
-<body>
-  <div class="box">
-    <div class="title">${row.name}</div>
-    <div class="qr">
-      <!-- 실제 QR 대신 목업 패턴 -->
-      ${getMockQrSVG()}
-    </div>
-    <div class="muted">스마트폰 카메라로 스캔하여 주문해주세요</div>
-    <div class="code">${location.origin}${row.code}</div>
-  </div>
-  <script>window.print()</script>
-</body>
-</html>`
-    const w = window.open('', '_blank', 'width=480,height=620')
-    if (w) {
-      w.document.open()
-      w.document.write(html)
-      w.document.close()
+  const onPointerDown = (e: React.PointerEvent, id: number) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
+    const el = e.currentTarget as HTMLElement
+    const table = rows.find(r => r.id === id)
+    if (!table) return
+    dragRef.current = {
+      id,
+      startX: e.clientX,
+      startY: e.clientY,
+      baseX: table.x,
+      baseY: table.y,
+      w: el.offsetWidth,
+      h: el.offsetHeight,
     }
+  }
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current) return
+    const { id, startX, startY, baseX, baseY, w, h } = dragRef.current
+    const dx = e.clientX - startX
+    const dy = e.clientY - startY
+    let nx = baseX + dx, ny = baseY + dy
+    ;({ x: nx, y: ny } = clampToFloor(nx, ny, w, h))
+    ;({ x: nx, y: ny } = snapIfNeeded(nx, ny))
+    setRows(list => list.map(r => (r.id === id ? { ...r, x: nx, y: ny } : r)))
+  }
+
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (!dragRef.current) return
+    e.currentTarget.releasePointerCapture(e.pointerId)
+    dragRef.current = null
   }
 
   return (
     <div className="page page-tables">
-      <div className="page container">
-        {/* 상단 오른쪽 툴바 */}
+      <div className="container">
+
+        {/* 상단 툴바 */}
         <div className="toolbar-right">
+          <label className="kv" style={{ gap: 8 }}>
+            <input type="checkbox" checked={snap} onChange={e => setSnap(e.target.checked)} />
+            스냅 정렬
+          </label>
           <button className="btn ghost" onClick={addBulk}>일괄 추가</button>
           <button className="btn primary" onClick={addOne}>+ 테이블 추가</button>
         </div>
 
         {/* 리스트 카드 */}
-        <div className="card">
+        <div className="card" style={{ marginBottom: 16 }}>
           <h3 className="section-title">등록된 테이블 목록</h3>
-
           <table className="table">
             <thead>
               <tr>
-                <th style={{textAlign:'left'}}>테이블 번호/이름</th>
-                <th>QR 코드</th>
+                <th style={{ textAlign: 'left' }}>테이블 번호/이름</th>
+                <th>QR</th>
                 <th>관리</th>
               </tr>
             </thead>
             <tbody>
               {rows.map(r => (
-                <tr key={r.id} onClick={() => setSelectedId(r.id)} style={{cursor:'pointer'}}>
-                  <td style={{textAlign:'left'}}>
-                    <div style={{display:'flex', alignItems:'center', gap:8}}>
-                      <span>{r.name}</span>
-                      {selectedId === r.id && <span className="badge gray">선택</span>}
-                    </div>
-                  </td>
+                <tr key={r.id}>
+                  <td style={{ textAlign: 'left' }}>{r.name}</td>
+                  <td><span className="badge gray">QR 코드 인쇄하기</span></td>
                   <td>
-                    <button className="btn outline" onClick={(e) => { e.stopPropagation(); printQR(r) }}>
-                      <PrinterIcon /> QR코드 인쇄
-                    </button>
-                  </td>
-                  <td>
-                    <button className="btn danger" onClick={(e) => { e.stopPropagation(); remove(r.id) }}>
-                      <TrashIcon /> 삭제
-                    </button>
+                    <button className="btn danger" onClick={() => remove(r.id)}>삭제</button>
                   </td>
                 </tr>
               ))}
@@ -137,59 +159,35 @@ export default function TablesPage() {
           </table>
         </div>
 
-        {/* QR 미리보기 */}
-        {selected && (
-          <div className="preview-wrap">
-            <div className="preview-card">
-              <div className="preview-title">QR 코드 인쇄 미리보기</div>
-              <div className="preview-sub">{selected.name}</div>
-
-              <div className="preview-qr">
-                {/* 실제 QR 대신 목업 패턴 */}
-                <div className="qr-box" dangerouslySetInnerHTML={{ __html: getMockQrSVG() }} />
-              </div>
-
-              <div className="preview-helper">스마트폰 카메라로 스캔하여 주문해주세요</div>
-              <div className="preview-code">{location.origin}{selected.code}</div>
+        {/* 배치 에디터 */}
+        <h3 className="section-title" style={{ marginTop: 0 }}>매장 배치(드래그 앤 드랍)</h3>
+        <div
+          className="floor"
+          ref={floorRef}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+        >
+          {rows.map(r => (
+            <div
+              key={r.id}
+              className="seat"
+              style={{ left: r.x, top: r.y }}     // ← 폭/높이 고정 제거
+              onPointerDown={(e) => onPointerDown(e, r.id)}
+              role="button"
+              aria-label={`${r.name} 배치`}
+            >
+              <div className="seat-name">{r.name}</div>
+              <button className="seat-del" onClick={(e) => { e.stopPropagation(); remove(r.id) }} aria-label="테이블 삭제">×</button>
+              {/* 필요 없으면 숨김 처리되어 있음 */}
+              <div className="seat-grip" aria-hidden="true">⋮⋮</div>
             </div>
-          </div>
-        )}
+          ))}
+          {!rows.length && (
+            <div className="floor-empty">+ 테이블 추가 버튼을 눌러 배치를 시작하세요</div>
+          )}
+        </div>
       </div>
     </div>
-  )
-}
-
-/** 간단한 모의 QR 패턴(svg) — 실제 QR 라이브러리 없이 시각 목업용 */
-function getMockQrSVG(): string {
-  return `
-<svg viewBox="0 0 100 100" width="220" height="220" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100" height="100" rx="4" fill="#f5f7fa" stroke="#e5e7eb"/>
-  <rect x="8" y="8" width="24" height="24" fill="#111827"/>
-  <rect x="68" y="8" width="24" height="24" fill="#111827"/>
-  <rect x="8" y="68" width="24" height="24" fill="#111827"/>
-  <!-- random dots -->
-  ${[...Array(28)].map(() => {
-      const x = Math.floor(Math.random()*70)+16
-      const y = Math.floor(Math.random()*70)+16
-      return `<rect x="${x}" y="${y}" width="6" height="6" fill="#111827" />`
-    }).join('')}
-</svg>`
-}
-
-/* 아이콘들 */
-function PrinterIcon(){
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{marginRight:6}}>
-      <path d="M7 8V4h10v4" stroke="currentColor" strokeWidth="1.6"/>
-      <rect x="5" y="8" width="14" height="8" rx="2" stroke="currentColor" strokeWidth="1.6"/>
-      <rect x="7" y="14" width="10" height="6" rx="1" stroke="currentColor" strokeWidth="1.6"/>
-    </svg>
-  )
-}
-function TrashIcon(){
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{marginRight:6}}>
-      <path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-    </svg>
   )
 }
