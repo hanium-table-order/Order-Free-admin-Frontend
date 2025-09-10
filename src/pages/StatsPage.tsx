@@ -62,7 +62,7 @@ export default function StatsPage() {
 
   return (
     <div className="page page-stats">
-      <div className="container" style={{ paddingTop: 8 }}>
+      <div className="container" style={{ paddingTop: 18 }}>
         {/* Header */}
         <div className="card" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12 }}>
           <div style={{ fontSize:20, fontWeight:800 }}>매출 통계</div>

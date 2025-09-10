@@ -25,10 +25,7 @@ export default function App() {
 
       <main className="page page-orders">
         <div className="container">
-        <h1>
 
-          
-        </h1>
           <Routes>
             <Route path="/" element={<OrdersPage />} />
             <Route path="/menu" element={<MenuPage />} />
