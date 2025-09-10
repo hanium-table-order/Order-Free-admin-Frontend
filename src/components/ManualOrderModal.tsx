@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Modal from './Modal'
 import { menuItems, tables } from '../mockData'
 import type { OrderItem } from '../types'

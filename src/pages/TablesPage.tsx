@@ -126,7 +126,7 @@ export default function TablesPage() {
 
         {/* 상단 툴바 */}
         <div className="toolbar-right">
-          <label className="kv" style={{ gap: 8 }}>
+          <label className="kv" style={{ gap: 8}}>
             <input type="checkbox" checked={snap} onChange={e => setSnap(e.target.checked)} />
             스냅 정렬
           </label>

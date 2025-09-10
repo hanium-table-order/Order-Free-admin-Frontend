@@ -95,10 +95,8 @@ export default function MenuPage() {
   return (
 
     <div className="card menu-card">
-
       {/* 상단 툴바 */}
       <div className="menu-toolbar">
-
         <input
           className="menu-search"
           value={query}
@@ -119,7 +117,6 @@ export default function MenuPage() {
           + 새 메뉴 추가
         </button>
       </div>
-      <div style={{ height: 16 }} />
       {/* 테이블 */}
       <table className="table menu-table">
         <thead>

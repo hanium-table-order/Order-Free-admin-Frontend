@@ -35,10 +35,6 @@ export default function OrdersPage() {
             />
             <span className="slider" />
           </label>
-
-          <button className="chip" onClick={() => setAutoAccept(v => !v)}>
-            {autoAccept ? '자동 접수: 켬' : '자동 접수: 끔'}
-          </button>
         </div>
 
         <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}>

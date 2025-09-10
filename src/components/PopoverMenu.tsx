@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Item = { label: string; onClick: () => void }
 type Props = { items: Item[] }

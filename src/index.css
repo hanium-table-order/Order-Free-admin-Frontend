@@ -159,8 +159,8 @@ input:checked + .slider:before{ transform: translateX(26px); }
 /* =========================================================
    메뉴 관리 (MenuPage)
    ========================================================= */
-.page.page-menu .container { padding: 0; }
-.menu-card{ padding:16px; }
+.card.menu-card .container { margin-top: 108px;}
+.menu-card{ padding: 16px;   margin-top: 16px; /* 👈 여기에 여백 추가 */}
 .menu-toolbar{ display:flex; gap:12px; align-items:center; margin-bottom:14px; }
 .menu-search{
   flex:1; min-width:220px; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px;
@@ -230,7 +230,7 @@ input:checked + .slider:before{ transform: translateX(26px); }
 /* =========================================================
    테이블 관리 (TablesPage) — 리스트 & 툴바
    ========================================================= */
-.page.page-tables .container { padding-top: 8px; }
+.page.page-tables .container { padding-top: 4px; }
 .page-tables .page-title{ margin: 10px 0 8px; line-height: 1.15; font-size: 28px; font-weight: 800; }
 .page-tables .toolbar-right{ display: flex; gap: 8px; justify-content: flex-end; align-items: center; margin: 6px 0 12px; }
 .page-tables .card{ padding: 16px 18px; }

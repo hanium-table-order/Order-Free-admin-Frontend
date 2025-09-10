@@ -11,7 +11,7 @@ export function useOrders() {
   useEffect(() => {
     const t = setInterval(() => {
       const m = menuItems[Math.floor(Math.random() * menuItems.length)]
-      const id = Math.random().toString(36).slice(2, 8)
+      const id = Math.random().toString(10000).slice(2, 8)
       const qty = 1 + Math.floor(Math.random() * 2)
       const tableId = tables[Math.floor(Math.random() * tables.length)]?.id ?? 1
 

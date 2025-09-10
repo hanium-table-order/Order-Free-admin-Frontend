@@ -17,7 +17,7 @@ export default function StorePage() {
     <div className="page page-store">
       <div className="container">
         {/* 헤더 */}
-
+        <h1 className="page-title"></h1>
         {/* 본문 */}
         <form onSubmit={onSubmit}>
           <div className="card">
